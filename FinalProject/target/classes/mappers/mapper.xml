@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mvc01.Mapper">
+
+<select id="lacategoryList" resultType="model.LcategoryTO">
+	select seq, name
+   	from lcategory
+   	order by name
+</select>
+
+<select id="sacategoryList" resultType="model.ScategoryTO">
+	select seq, name, lseq
+   	from scategory
+   	order by name
+</select>
+
+<update id="lcategorySeq">
+	alter table lcategory auto_increment = 1
+</update>
+
+<insert id="lcategoryWriteOk" parameterType="String">
+	insert into lcategory
+	values (0, #{name})
+</insert>
+
+<select id="lcategoryModify" parameterType="String" resultType="model.LcategoryTO">
+	select name
+	from lcategory
+	where seq = #{seq}
+</select>
+
+<update id="lcategoryModifyOk" parameterType="model.LcategoryTO">
+	update lcategory set
+	name = #{name}
+	where seq = #{seq}
+</update>
+
+<select id="lcategoryDelete" parameterType="String" resultType="model.LcategoryTO">
+	select name
+	from lcategory
+	where seq = #{seq}
+</select>
+
+<update id="lcategoryDeleteOk" parameterType="model.LcategoryTO">
+	delete from lcategory
+	where seq = #{seq}
+</update>
+
+<update id="scategorySeq">
+	alter table scategory auto_increment = 1
+</update>
+
+<insert id="scategoryWriteOk" parameterType="model.ScategoryTO">
+	insert into scategory
+	values (0, #{name}, #{lseq})
+</insert>
+
+<select id="scategoryModify" parameterType="String" resultType="model.ScategoryTO">
+	select name
+	from scategory
+	where seq = #{seq}
+</select>
+
+<update id="scategoryModifyOk" parameterType="model.ScategoryTO">
+	update scategory set
+	name = #{name}
+	where seq = #{seq}
+</update>
+
+<select id="scategoryDelete" parameterType="String" resultType="model.ScategoryTO">
+	select name
+	from scategory
+	where seq = #{seq}
+</select>
+
+<update id="scategoryDeleteOk" parameterType="model.ScategoryTO">
+	delete from scategory
+	where seq = #{seq}
+</update>
+
+<select id="lcategorySelect" resultType="model.LcategoryTO">
+	select seq, name
+	from lcategory
+	order by name
+</select>
+
+<select id="scategorySelect" parameterType="String" resultType="model.ScategoryTO">
+	select seq, name
+	from scategory
+	where lseq = #{lseq}
+	order by name
+</select>
+
+<select id="boardList" parameterType="String" resultType="model.BoardTO">
+	select seq, subject, sseq
+   	from board
+   	where sseq = #{sseq}
+</select>
+
+<update id="boardSeq">
+	alter table board auto_increment = 1
+</update>
+
+<insert id="boardWriteOk" parameterType="model.BoardTO">
+	insert into board
+	values (0, #{subject}, #{link}, #{content}, now(), #{sseq})
+</insert>
+
+<select id="boardView" parameterType="String" resultType="model.BoardTO">
+	select seq, subject, link, content, date_format(wdate, '%Y-%m-%d') wdate, sseq
+	from board
+	where seq = #{seq}
+</select>
+
+<select id="boardViewRecent" parameterType="String" resultType="model.BoardTO">
+	select seq, subject, link, content, date_format(wdate, '%Y-%m-%d') wdate, sseq
+	from board
+	where sseq = #{sseq}
+	order by seq desc
+	limit 0, 1
+</select>
+
+<select id="boardModify" parameterType="String" resultType="model.BoardTO">
+	select seq, subject, link, content, sseq
+	from board
+	where seq = #{seq}
+</select>
+
+<update id="boardModifyOk" parameterType="model.BoardTO">
+	update board set
+	subject = #{subject}, link = #{link}, content = #{content}, wdate= now(), sseq = #{sseq}
+	where seq = #{seq}
+</update>
+
+<select id="boardDelete" parameterType="String" resultType="model.BoardTO">
+	select seq, subject
+	from board
+	where seq = #{seq}
+</select>
+
+<delete id="boardDeleteOk" parameterType="String">
+	delete from board
+	where seq = #{seq}
+</delete>
+
+<select id="commentList" resultType="model.CommentTO">
+	select seq, writer, password, content, date_format(cdate, '%Y-%m-%d (%H : %i)') cdate
+	from comment
+	where cseq = #{cseq}
+	order by seq desc
+</select>
+
+<update id="commentSeq">
+	alter table comment auto_increment = 1
+</update>
+
+<insert id="commentWriteOk" parameterType="model.CommentTO">
+	insert into comment
+	values (0, #{writer}, #{password}, #{content}, now(), #{cseq})
+</insert>
+
+<select id="commentModify" parameterType="String" resultType="model.CommentTO">
+	select seq, writer, content
+	from comment
+	where seq = #{seq}
+</select>
+
+<update id="commentModifyOk" parameterType="model.CommentTO">
+	update comment set
+	content = #{content}, cdate = now()
+	where seq = #{seq} and password = #{password}
+</update>
+
+<select id="commentDelete" parameterType="String" resultType="model.CommentTO">
+	select seq, writer, content 
+	from comment
+	where seq = #{seq}
+</select>
+
+<delete id="commentDeleteOk" parameterType="model.CommentTO">
+	delete from comment
+	where seq = #{seq} and password = #{password}
+</delete>
+
+<delete id="commentManagerDeleteOk" parameterType="String">
+	delete from comment
+	where seq = #{seq}
+</delete>
+
+<select id="guestbookList" resultType="model.GuestbookTO">
+	select seq, writer, content, date_format(wdate, '%Y-%m-%d %H : %i') wdate
+	from guestbook 
+	order by seq desc
+</select>
+
+<update id="guestbookSeq">
+	alter table guestbook auto_increment = 1
+</update>
+
+<insert id="guestbookWriteOk" parameterType="model.GuestbookTO">
+	insert into guestbook 
+	values (0, #{writer}, #{password}, #{content}, now())
+</insert>
+
+<select id="guestbookModify" parameterType="String" resultType="model.GuestbookTO">
+	select seq, writer, content
+	from guestbook
+	where seq = #{seq}
+</select>
+
+<update id="guestbookModifyOk" parameterType="model.GuestbookTO">
+	update guestbook set
+	content = #{content}, wdate = now()
+	where seq = #{seq} and password = #{password}
+</update>
+
+<select id="guestbookDelete" parameterType="String" resultType="model.GuestbookTO">
+	select seq, writer, content 
+	from guestbook
+	where seq = #{seq}
+</select>
+
+<delete id="guestbookDeleteOk" parameterType="model.GuestbookTO">
+	delete from guestbook
+	where seq = #{seq} and password = #{password}
+</delete>
+
+<delete id="guestbookManagerDeleteOk" parameterType="String">
+	delete from guestbook
+	where seq = #{seq}
+</delete>
+
+<select id="galleryMain" resultType="model.GalleryTO">
+	select subject, filename
+	from gallery
+	order by seq desc
+	limit 0, 6
+</select>
+
+<select id="galleryList" parameterType="Integer" resultType="model.GalleryTO">
+	select seq, subject, filename, date_format(wdate, '%Y-%m-%d') wdate 
+	from gallery
+	order by seq desc
+	limit #{pageStart}, 6
+</select>
+
+<select id="galleryTotal" resultType="Integer">
+	select count(*)
+	from gallery
+</select>
+
+<update id="gallerySeq">
+	alter table gallery auto_increment = 1
+</update>
+
+<insert id="galleryWriteOk" parameterType="model.GalleryTO">
+	insert into gallery
+	values (0, #{subject}, #{filename}, now())
+</insert>
+
+<select id="galleryModify" parameterType="String" resultType="model.GalleryTO">
+	select seq, subject, filename 
+	from gallery
+	where seq = #{seq}
+</select>
+
+<update id="galleryModifyOk" parameterType="model.GalleryTO">
+	update gallery set
+	subject = #{subject}, filename = #{filename}, wdate = now()
+	where seq = #{seq}
+</update>
+
+<select id="galleryDelete" parameterType="String" resultType="model.GalleryTO">
+	select seq, subject, filename 
+	from gallery
+	where seq = #{seq}
+</select>
+
+<delete id="galleryDeleteOk" parameterType="model.GalleryTO">
+	delete from gallery
+	where seq = #{seq}
+</delete>
+
+<select id="ManagerLoginOk" parameterType="model.ManagerTO" resultType="int">
+	select count(*)
+	from manager
+	where id = #{id} and password = #{password}
+</select>
+
+<select id="UserSignupCheck" parameterType="String" resultType="int">
+	select count(*)
+	from user
+	where email = #{email}
+</select>
+
+<insert id="UserSignupOk" parameterType="model.UserTO">
+	insert into user
+	values (0, #{name}, #{email}, password(#{password}), now())
+</insert>
+
+<select id="UserLoginOk" parameterType="model.UserTO" resultType="model.UserTO">
+	select seq, name
+	from user
+	where email = #{email} and password = password(#{password})
+</select>
+
+<select id="UserModify" parameterType="model.UserTO" resultType="model.UserTO">
+	select email
+	from user
+	where seq = #{seq} and password = password(#{password})
+</select>
+
+<update id="UserModifyOk" parameterType="model.UserTO">
+	update user set
+	password = password(#{password})
+	where seq = #{seq}
+</update>
+
+<select id="UserDelete" parameterType="model.UserTO" resultType="model.UserTO">
+	select email
+	from user
+	where seq = #{seq} and password = password(#{password})
+</select>
+
+<delete id="UserDeleteOk" parameterType="String">
+	delete from user
+	where seq = #{seq}
+</delete>
+
+<select id="UserFindPassword" parameterType="String" resultType="model.UserTO">
+	select seq, name
+	from user
+	where email = #{email}
+</select>
+
+<update id="UserFindPasswordOk" parameterType="model.UserTO">
+	update user set
+	password = password(#{password})
+	where seq = #{seq}
+</update>
+
+</mapper>
